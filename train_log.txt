@@ -1,0 +1,13 @@
+48000 training transitions, collision rate 0.20
+[genie] step   500  next-frame CE 0.5996  (54s)
+[genie] step  1000  next-frame CE 0.5215  (108s)
+[genie] step  1500  next-frame CE 0.4627  (162s)
+[genie] step  2000  next-frame CE 0.4268  (215s)
+[genie] step  2500  next-frame CE 0.3111  (268s)
+[genie] step  3000  next-frame CE 0.3847  (320s)
+[peragent] step   500  next-frame CE 0.2093  (60s)
+[peragent] step  1000  next-frame CE 0.0083  (121s)
+[peragent] step  1500  next-frame CE 0.0003  (182s)
+[peragent] step  2000  next-frame CE 0.0003  (247s)
+[peragent] step  2500  next-frame CE 0.0001  (318s)
+[peragent] step  3000  next-frame CE 0.0001  (399s)

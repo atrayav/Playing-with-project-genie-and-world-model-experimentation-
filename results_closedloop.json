@@ -1,0 +1,56 @@
+{
+  "peragent/open_loop": {
+    "goal_reached": 0.7666666666666667,
+    "episodes_with_violation": 0.67,
+    "steps_violating": 0.2732142857142857,
+    "steps_rule_consistent": 0.7098214285714286,
+    "frames_rejected_and_fixed": 0.0,
+    "ms_per_step": 0.7831171550594413,
+    "mean_steps": 11.2
+  },
+  "peragent/replan": {
+    "goal_reached": 0.8233333333333334,
+    "episodes_with_violation": 0.6566666666666666,
+    "steps_violating": 0.3019831730769231,
+    "steps_rule_consistent": 0.6862980769230769,
+    "frames_rejected_and_fixed": 0.0,
+    "ms_per_step": 0.544165706129717,
+    "mean_steps": 11.093333333333334
+  },
+  "peragent/recover": {
+    "goal_reached": 0.9866666666666667,
+    "episodes_with_violation": 0.0,
+    "steps_violating": 0.0,
+    "steps_rule_consistent": 0.933579335793358,
+    "frames_rejected_and_fixed": 0.24686346863468633,
+    "ms_per_step": 0.670878561623655,
+    "mean_steps": 9.033333333333333
+  },
+  "peragent_ft/open_loop": {
+    "goal_reached": 0.64,
+    "episodes_with_violation": 0.31,
+    "steps_violating": 0.06419507340134362,
+    "steps_rule_consistent": 0.9300821099776063,
+    "frames_rejected_and_fixed": 0.0,
+    "ms_per_step": 0.5348357379945688,
+    "mean_steps": 13.396666666666667
+  },
+  "peragent_ft/replan": {
+    "goal_reached": 0.9366666666666666,
+    "episodes_with_violation": 0.2833333333333333,
+    "steps_violating": 0.1184645929847783,
+    "steps_rule_consistent": 0.8461283917935142,
+    "frames_rejected_and_fixed": 0.0,
+    "ms_per_step": 0.5513976257444191,
+    "mean_steps": 10.073333333333334
+  },
+  "peragent_ft/recover": {
+    "goal_reached": 1.0,
+    "episodes_with_violation": 0.0,
+    "steps_violating": 0.0,
+    "steps_rule_consistent": 0.9644114196323818,
+    "frames_rejected_and_fixed": 0.07665232694563942,
+    "ms_per_step": 0.5940792307390387,
+    "mean_steps": 8.523333333333333
+  }
+}
