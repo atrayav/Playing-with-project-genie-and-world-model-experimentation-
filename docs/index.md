@@ -5,7 +5,7 @@ title: Two Agents, One World
 
 # Two agents, one world: what breaks when AI characters share a generated environment?
 
-*November 4, 2026 · @raj · World models / multi-agent RL*
+*November 4, 2026 · @Varun Atraya · World models / multi-agent RL*
 
 I recently got invited to a call with someone at Google Labs, so I started reading more about what the team was working on. That's how I ended up learning about Project Genie and spending a lot more time looking into world models than I expected.
 
@@ -13,13 +13,13 @@ One thing I noticed was that both Genie 3 and the new Genie 4 mention interactio
 
 I wanted to try it rather than just read about it, so I built a small experiment with an 8×8 grid, two agents, and a learned model that predicts what happens next. I later added an AI character that tries to reach a goal while the other character gets in its way. It's obviously nowhere near the scale of Genie, but it was enough to make the failure cases pretty clear.
 
-The funniest result was that the AI could sometimes reach its goal **by walking through a wall**. If I'd just looked at the success rate, I would've missed that completely.
+The funniest result was that the AI could sometimes reach its goal **by literally walking through a wall**. If I'd just looked at the success rate, I would've missed that completely.
 
 ## Part 1: Learning separate actions from unlabeled transitions
 
 ### Why learn actions from video?
 
-The [original Genie paper](https://proceedings.mlr.press/v235/bruce24a.html) starts with a problem I hadn't thought much about before. If you train on gameplay videos from the internet, you see what happened on the screen, but you don't know which buttons the player pressed. Genie handles this with a latent action model that learns a small set of codes to help predict the next frame. Ideally, those codes pick up something like the player's actions without being given the action labels.
+The [original Genie paper](https://proceedings.mlr.press/v235/bruce24a.html) starts with a problem I hadn't thought much about before. If you train on gameplay videos from the internet, you see what happened on the screen but you don't know which buttons the player pressed. Genie handles this with a latent action model that learns a small set of codes to help predict the next frame. Ideally, those codes pick up something like the player's actions without being given the action labels.
 
 If there's only one player, it's easy to imagine a code learning something like "move left." With two players moving at once, though, what should one code mean? A moves left? B moves right? Both do something?
 
@@ -40,7 +40,7 @@ I generated **48,000 transitions** from **3,000 episodes of 16 steps**. Their mo
 
 I skipped the video tokenizer because the observations are already tiny grids. The learned model predicts the next grid state directly. So this is inspired by Genie's *latent-action question*, not an implementation of Genie 1 or Genie 4.
 
-One thing I need to be careful about here: the single-code model only has eight codes, while the per-agent model has two slots of eight, or up to 64 combinations. There are 25 possible pairs of actions. So part of the difference could just be that the first model doesn't have enough codes. I'd need a larger joint codebook to tell whether separating the agents actually helps beyond giving the model more capacity.
+One thing I need to be careful about and mention here is that the single-code model only has eight codes, while the per-agent model has two slots of eight, or up to 64 combinations. There are 25 possible pairs of actions. So part of the difference could just be that the first model doesn't have enough codes. I'd need a larger joint codebook to tell whether separating the agents actually helps beyond giving the model more capacity.
 
 ### First result: two code slots made independent steering easier
 
