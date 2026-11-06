@@ -7,7 +7,7 @@ title: Two Agents, One World
 
 *November 4, 2026 · @Varun Atraya · World models / multi-agent RL*
 
-I recently got invited to a call with someone at Google Labs, so I started reading more about what the team was working on. That's how I ended up learning about Project Genie and spending a lot more time looking into world models than I expected.
+I recently got invited to a call with someone at Google Labs, so I started reading more about what the team was working on. That's how I ended up learning about Project Genie and got quite interested in world models!
 
 One thing I noticed was that both Genie 3 and the new Genie 4 mention interactions between independent agents as an open problem. That's pretty close to the research I've been doing in multi-agent RL, except I usually look at it from the agent's side. I work on how an agent can learn about an unfamiliar partner from its behavior. With Genie, I started wondering about something a bit different: can the *world model itself* keep track of two people acting in the same environment?
 
