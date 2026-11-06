@@ -5,9 +5,9 @@ title: Two Agents, One World
 
 # Two agents, one world: what breaks when AI characters share a generated environment?
 
-*November 4, 2026 · @Varun Atraya · World models / multi-agent RL*
+*November 5, 2026 · @Varun Atraya · World models / multi-agent RL*
 
-I started reading about Project Genie recently, and the bit that caught my attention was the challenge of having multiple agents act in the same generated world. It's close to the multi-agent RL work I've been doing, except I'm usually looking at what an agent can learn about another agent. I wanted to try looking at it from the world's side instead.
+I started reading about Project Genie recently and the part that caught my attention was the challenge of having multiple agents act in the same generated world. It's pretty similar to the multi-agent RL work I've been doing but I'm usually looking at what an agent can learn about another agent. I wanted to try looking at it from the world's side instead!
 
 I built a little 8×8 gridworld with two characters and trained a model to predict what happens when they move. Then I gave one of them a goal to reach while the other wandered around and sometimes got in the way.
 
@@ -21,7 +21,7 @@ I'll start with what happened when I let an AI character navigate the generated 
 
 ## Part 1: When the learned world breaks
 
-I gave agent B a goal on the grid and had it plan a route there. Agent A wandered around and sometimes stepped into its path. I treated A as the user-controlled character, although for these tests its movements came from a script, not a person. After each move, the model predicted what the grid should look like next.
+I gave agent B a goal on the grid and had it plan a route there. Agent A wandered around and sometimes stepped into its path. I treated A as the user-controlled character although for these tests its movements came from a script, not a person. After each move, the model predicted what the grid should look like next.
 
 The important part is that I used the learned model as the world. There wasn't a game engine correcting its predictions behind the scenes. If the model put someone on the other side of a wall, that's what the AI saw on its next step.
 
@@ -43,7 +43,7 @@ In the open-loop experiment, the video-only model's AI reached its goal in **77%
 
 But **67% of all the open-loop episodes** had at least one impossible state. The AI was sometimes getting there by walking through a wall or another character.
 
-That result made me laugh a bit. I'd built something that could report a win partly because the world let the AI cheat.
+That result made me laugh a bit. I'd built something that could report a win partly because the world let the AI cheat!
 
 ![Goal-reaching, broken episodes, and rule agreement across runtime setups](https://raw.githubusercontent.com/atrayav/Playing-with-project-genie-and-world-model-experimentation-/main/fig_closedloop.png)
 
@@ -53,13 +53,13 @@ A better metric would be how often the AI reaches the goal **without any broken 
 
 ### A checker that only complains doesn't solve much
 
-My first attempt was to check each frame and make the AI replan when something looked wrong. That barely helped: episodes with a broken frame went from about **67%** to **66%**.
+My first attempt was to check each frame and make the AI replan when something looked wrong. That barely helped when I realized that the episodes with a broken frame went from about **67%** to **66%**.
 
 It made sense once I looked at what I was actually changing. The AI was picking a new route, but I was still accepting the same bad predictions from the world model.
 
-So I changed the decoder to reject invalid positions and pick the most likely valid alternative from the scores it had already computed. I didn't run the world model again; I just used its existing prediction differently.
+So I changed the decoder to reject invalid positions and pick the most likely valid alternative from the scores it had already computed. I didn't run the world model again, I just used its existing prediction differently.
 
-With that change, accepted checker violations dropped to **0%**, and agreement with the actual gridworld's transition rules improved from **69% to 93%** in the reported evaluation.
+With that change, we finally saw the accepted checker violations drop to **0%**, and agreement with the actual gridworld's transition rules improved from **69% to 93%** in the reported evaluation!
 
 Zero accepted violations sounds impressive, but it mostly follows from the way I wrote the checker: it won't accept a frame that breaks its own rules. The more useful result is **93% agreement with the separate gridworld simulator**. A frame can pass the checks and still be wrong.
 
@@ -76,7 +76,7 @@ With the video-only model, recovery stepped in on about **25%** of frames. After
 
 My version was cheap because the correction reused the model's existing scores. With actual generated video, that might be a lot harder. If every correction means generating more frames, fixing the world could also make it feel slower to control.
 
-I haven't measured meaningful end-to-end latency, so **25% corrected frames isn't a latency estimate**. The next thing I'd measure is how many attempts each accepted frame takes and how long it takes for an action to show up on screen.
+I haven't measured end-to-end latency just yet, so **25% corrected frames isn't a latency estimate**. The next thing I'd measure is how many attempts each accepted frame takes and how long it takes for an action to show up on screen due to latency being so important.
 
 ## Part 2: Why the model struggled with blocked moves
 
@@ -84,11 +84,11 @@ This is where the first half of the project comes in. Before trying the AI-goal 
 
 ### Why learn actions from video?
 
-The [original Genie paper](https://proceedings.mlr.press/v235/bruce24a.html) starts with a problem I hadn't thought much about before. If you train on gameplay videos from the internet, you see what happened on the screen, but you don't know which buttons the player pressed. Genie handles this with a latent action model that learns a small set of codes to help predict the next frame. Ideally, those codes pick up something like the player's actions without being given the action labels.
+The [original Genie paper](https://proceedings.mlr.press/v235/bruce24a.html) starts with a problem I hadn't thought much about before. If you train on gameplay videos from the internet, you see what happened on the screen but you don't know which buttons the player pressed. From my understanding, Genie handles this with a latent action model that learns a small set of codes to help predict the next frame. Ideally, those codes pick up something like the player's actions without being given the action labels.
 
 If there's only one player, it's easy to imagine a code learning something like "move left." With two players moving at once, though, what should one code mean? A moves left? B moves right? Both do something?
 
-So my first test was pretty simple: what changes if each agent gets its own latent action instead of sharing one code for the entire step?
+My first test was pretty simple, I was curious about what changes if each agent gets its own latent action instead of sharing one code for the entire step.
 
 ### The setup
 
@@ -147,11 +147,11 @@ Rollouts made the gap more obvious. After eight steps feeding each prediction ba
 
 ## What this does (and doesn't) say about Genie
 
-[Google's Genie 4 announcement](https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/) describes a system where Gemini observes the generated simulation, checks whether steps happened, and changes its plan when a user intervenes. Google also lists interactions between independent agents and maintaining a shared world as ongoing research problems.
+[Google's Genie 4 announcement](https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/) describes a system where Gemini observes the generated simulation, checks whether steps happened and then changes its plan when a user intervenes. Google also lists interactions between independent agents and maintaining a shared world as ongoing research problems.
 
-I came away thinking about three separate things: whether I can control each character, whether the world follows its own rules, and whether the AI reaches its goal. My first results made it pretty clear those aren't interchangeable.
+I came away thinking about three separate thing.: whether I can control each character, whether the world follows its own rules, and whether the AI reaches its goal. My first results made it pretty clear those aren't interchangeable.
 
-It's also a very different setup from Genie. My model predicts grid positions, not video or audio. I can check the exact wall and character locations, which you can't just read off from a generated video. I also used one main training seed, scripted behavior, and separate channels for the two characters.
+It's also a very different setup from Genie. My model predicts grid positions, not video or audio. I can check the exact wall and character locations, which you can't just read off from a generated video. I also used one main training seed, a scripted behavior and separate channels for the two characters.
 
 So I wouldn't use any of these numbers to make claims about Genie. It was just a useful way to see how misleading a task-success metric can be when the environment itself is learned.
 
@@ -161,11 +161,11 @@ The first thing I'd do is train a **capacity-matched joint-action model**. My ei
 
 After that I'd rerun the experiments with multiple seeds and new wall layouts, and report **valid task success** alongside goal-reaching. I'd also log how often recovery intervenes and what it costs in runtime, rather than guessing about the latency tradeoff.
 
-I'd also be interested in a learned checker. Writing rules for an 8×8 grid is easy enough; doing the same thing for arbitrary generated scenes is a completely different problem. A learned checker could help, but then you'd have to evaluate its mistakes too.
+I'd also be interested in a learned checker. Writing rules for an 8×8 grid is easy enough but doing the same thing for arbitrary generated scenes is a completely different problem. A learned checker could help, but then you'd have to evaluate its mistakes too.
 
 ## What I took away
 
-I started this because the two-agent problem reminded me of my research, but the bit I keep thinking about isn't really the action codes. It's how easily I could get a good-looking result while the world was doing something obviously wrong. Seeing that happen on a tiny grid made me want to be more careful about what counts as success.
+I started this because the two-agent problem reminded me of my research, but the bit I keep thinking about isn't really the action codes. It's how easily I could get a good-looking result while the world was doing something obviously wrong. Seeing that happen on a tiny grid made me want to be more careful about what counts as success and for users!
 
 ## Code and reproducibility
 
