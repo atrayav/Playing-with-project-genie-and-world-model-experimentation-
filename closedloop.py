@@ -183,6 +183,7 @@ def run(model, kind, mode, seed):
         stats["steps"] += 1
     else:
         stats["reached"] = bool((pos_of(state)[1] == goal).all())
+    stats["valid_goal_reached"] = bool(stats["reached"] and stats["violating_steps"] == 0)
     return stats
 
 
@@ -195,6 +196,7 @@ def main():
             steps = sum(s["steps"] for s in S)
             out[f"{kind}/{mode}"] = {
                 "goal_reached": float(np.mean([s["reached"] for s in S])),
+                "valid_goal_reached": float(np.mean([s["valid_goal_reached"] for s in S])),
                 "episodes_with_violation": float(np.mean([s["violating_steps"] > 0 for s in S])),
                 "steps_violating": sum(s["violating_steps"] for s in S) / steps,
                 "steps_rule_consistent": sum(s["rule_consistent"] for s in S) / steps,
